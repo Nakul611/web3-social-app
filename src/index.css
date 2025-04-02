@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Default light theme */
+html {
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+/* Dark mode */
+.dark {
+  background-color: #0a0a23;
+  color: white;
+}
+
+/* Glassmorphism Effect */
+.glass-container {
+  @apply bg-white/10 backdrop-blur-lg p-6 rounded-xl shadow-lg border border-white/20;
+}
