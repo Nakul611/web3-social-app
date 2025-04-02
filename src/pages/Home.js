@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PostList from "../components/PostList";
 import CreatePost from "../components/CreatePost";
 import { motion, AnimatePresence } from "framer-motion";
+import { ethers } from "ethers";
 
 const mockPosts = [
   {
@@ -25,6 +26,7 @@ const mockPosts = [
 const Home = ({ isConnected, userAddress }) => {
   const [posts, setPosts] = useState([]);
   const [modalPost, setModalPost] = useState(null);
+  const [ensName, setEnsName] = useState(null);
 
   useEffect(() => {
     const storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
@@ -36,10 +38,27 @@ const Home = ({ isConnected, userAddress }) => {
     }
   }, []);
 
+  useEffect(() => {
+    const fetchENSName = async () => {
+      if (userAddress) {
+        try {
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const name = await provider.lookupAddress(userAddress);
+          if (name) {
+            setEnsName(name);
+          }
+        } catch (error) {
+          console.error("Failed to fetch ENS name:", error);
+        }
+      }
+    };
+    fetchENSName();
+  }, [userAddress]);
+
   const addPost = (newPost) => {
     const postWithDetails = {
       ...newPost,
-      author: userAddress || "Anonymous",
+      author: ensName || userAddress || "Anonymous",
       timestamp: new Date().toISOString(),
       likes: 0,
     };
@@ -129,6 +148,26 @@ const Home = ({ isConnected, userAddress }) => {
                 </div>
               </motion.div>
             ))}
+
+            {/* Display the connected wallet user */}
+            {isConnected && userAddress && (
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+                className="flex items-center bg-gray-700 p-3 rounded-lg shadow-md"
+              >
+                <div className="w-10 h-10 flex items-center justify-center rounded-full bg-green-500 text-white text-lg font-bold">
+                  {ensName ? ensName.charAt(0).toUpperCase() : "W"}
+                </div>
+                <div className="ml-3">
+                  <p className="text-md font-semibold">
+                    {ensName ||
+                      userAddress.slice(0, 6) + "..." + userAddress.slice(-4)}
+                  </p>
+                  <p className="text-sm text-gray-300">Connected Wallet</p>
+                </div>
+              </motion.div>
+            )}
           </div>
         </motion.div>
       </div>

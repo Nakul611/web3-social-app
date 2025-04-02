@@ -20,7 +20,14 @@ const WalletConnect = ({ setIsConnected }) => {
         console.error("Connection failed:", error);
       }
     } else {
-      alert("Please install MetaMask!");
+      // 📌 Redirect mobile users to MetaMask app
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobile) {
+        window.location.href =
+          "https://metamask.app.link/dapp/" + window.location.hostname;
+      } else {
+        alert("Please install MetaMask!");
+      }
     }
   };
 
