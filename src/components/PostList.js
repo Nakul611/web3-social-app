@@ -68,7 +68,7 @@ const PostItem = ({ post, onDelete, onEdit, onClick }) => {
               onEdit(post);
             }}
           >
-            ✏️ Edit
+            Edit
           </button>
           <button
             className="bg-red-600 hover:bg-red-500 px-3 py-1 rounded text-white"
@@ -77,7 +77,7 @@ const PostItem = ({ post, onDelete, onEdit, onClick }) => {
               onDelete();
             }}
           >
-            ❌ Delete
+            Delete
           </button>
         </div>
       </div>
